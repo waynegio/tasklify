@@ -32,20 +32,20 @@ export default function Home() {
             setCount((prev) => prev + 1);
           }}
         >
-          Increment
-        </button>
-        <button
-          className="p-2 rounded-2xl bg-red-500 flex justify-center cursor-pointer"
-          onClick={() => setCount(count - 1)}
-          disabled={count == 0}
-        >
-          Decrement
+          Increase
         </button>
         <button
           className="p-2 rounded-2xl bg-red-800 flex justify-center cursor-pointer"
           onClick={() => setCount(0)}
         >
           RESET
+        </button>
+        <button
+          className="p-2 rounded-2xl bg-red-500 flex justify-center cursor-pointer"
+          onClick={() => setCount(count - 1)}
+          disabled={count == 0}
+        >
+          Decrease
         </button>
       </div>
     </div>
