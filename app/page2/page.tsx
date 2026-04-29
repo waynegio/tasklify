@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [arr, setArr] = useState<string[]>([]);
+  type todo = {
+    id: string;
+    task: string;
+    status: boolean;
+  };
+
+  const [arr, setArr] = useState<todo[]>([]);
   const [text, setText] = useState<string>("");
 
   const addTask = () => {
@@ -14,12 +20,33 @@ export default function Home() {
       setText("");
       return;
     }
-    setArr((prev) => [...prev, text]);
+    setArr((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), task: text, status: false },
+    ]);
     setText("");
   };
 
-  const removeTask = (index: number) => {
-    setArr((prev) => prev.filter((_, i) => i != index));
+  // const removeTask = (index: number) => {
+  //   setArr((prev) => prev.filter((_, i) => i != index));
+  // };
+
+  // const doneTask = (index: number) => {
+  //   const copy = [...arr];
+  //   copy[index].status = !copy[index].status;
+  //   setArr(copy);
+  // };
+
+  const doneTask = (id: string) => {
+    setArr((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, status: !item.status } : item,
+      ),
+    );
+  };
+
+  const removeAll = () => {
+    setArr([]);
   };
 
   useEffect(() => {
@@ -52,17 +79,25 @@ export default function Home() {
           >
             +
           </button>
+          <button
+            className="w-15 bg-black rounded-2xl aspect-square text-3xl text-white"
+            onClick={() => removeAll()}
+          >
+            x
+          </button>
         </div>
         <div className="flex flex-col gap-4 mt-4">
-          {arr.map((task, index) => (
-            <div
-              key={index}
-              className="flex cursor-pointer border-2 border-gray-300 rounded-2xl p-4"
-              onClick={() => removeTask(index)}
-            >
-              <p>{task}</p>
-            </div>
-          ))}
+          {[...arr]
+            .sort((a, b) => Number(a.status) - Number(b.status))
+            .map((item) => (
+              <div
+                key={item.id}
+                className={`flex cursor-pointer border-2 border-gray-300 rounded-2xl p-4 ${item.status ? "line-through text-gray-400" : ""}`}
+                onClick={() => doneTask(item.id)}
+              >
+                <p>{item.task}</p>
+              </div>
+            ))}
         </div>
       </main>
     </div>
