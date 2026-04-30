@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [count, setCount] = useState<number>(0);
+  const [arr, setArr] = useState<any[]>([1, 5, 5]);
 
   useEffect(() => {
     const saved = localStorage.getItem("count");
