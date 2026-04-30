@@ -63,11 +63,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center h-screen bg-zinc-50">
-      <main className="mt-8 px-2 flex w-full flex-col sm:w-auto">
+      <main className="mt-8 px-4 flex w-full flex-col sm:w-auto">
         <div className="flex gap-4">
           <input
             type="text"
-            className="w-60 sm:w-80 border p-2 rounded-2xl border-gray-400 focus:border-gray-500 focus:shadow-sm focus:border-4 focus:outline-none"
+            className="w-full sm:w-80 border p-2 rounded-2xl border-gray-400 focus:border-gray-500 focus:shadow-sm focus:outline-none"
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {
