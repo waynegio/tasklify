@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Plus, X } from "lucide-react";
 
 export default function Home() {
   type todo = {
@@ -61,12 +62,12 @@ export default function Home() {
   }, [arr]);
 
   return (
-    <div className="flex flex-col items-center h-screen">
-      <main className="mt-8">
+    <div className="flex flex-col items-center h-screen bg-zinc-50">
+      <main className="mt-8 px-2 flex w-full flex-col sm:w-auto">
         <div className="flex gap-4">
           <input
             type="text"
-            className="w-80 border p-2 rounded-2xl border-gray-400 focus:border-gray-500 focus:shadow-md focus:border-4 focus:outline-none"
+            className="w-60 sm:w-80 border p-2 rounded-2xl border-gray-400 focus:border-gray-500 focus:shadow-sm focus:border-4 focus:outline-none"
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {
@@ -74,25 +75,28 @@ export default function Home() {
             }}
           />
           <button
-            className="w-15 bg-black rounded-2xl aspect-square text-3xl text-white"
+            className="w-12 sm:w-15 bg-black rounded-2xl aspect-square text-3xl text-white flex items-center justify-center"
             onClick={() => addTask()}
           >
-            +
+            <Plus size={30} />
           </button>
           <button
-            className="w-15 bg-black rounded-2xl aspect-square text-3xl text-white"
+            className="w-12 sm:w-15 bg-black rounded-2xl aspect-square text-3xl text-white flex items-center justify-center"
             onClick={() => removeAll()}
           >
-            x
+            <X size={30} />
           </button>
         </div>
+        <p>
+          {arr.filter((item) => !item.status).length} of {arr.length}
+        </p>
         <div className="flex flex-col gap-4 mt-4">
           {[...arr]
             .sort((a, b) => Number(a.status) - Number(b.status))
             .map((item) => (
               <div
                 key={item.id}
-                className={`flex cursor-pointer border-2 border-gray-300 rounded-2xl p-4 ${item.status ? "line-through text-gray-400" : ""}`}
+                className={`flex cursor-pointer border-2 border-gray-300 rounded-2xl p-2 sm:p-4 ${item.status ? "line-through text-gray-400" : ""}`}
                 onClick={() => doneTask(item.id)}
               >
                 <p>{item.task}</p>
