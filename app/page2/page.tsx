@@ -89,12 +89,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center h-[100vh] bg-zinc-50">
-      <main className="pt-8 px-4 flex flex-col sm:w-180 h-full">
+      <main className="pt-8 px-4 flex flex-col sm:w-180 h-full w-full">
         <div className="flex gap-4">
           <input
             type="text"
             placeholder="Add a new task..."
-            className="w-full p-4 shadow-sm border rounded-2xl border-gray-400 focus:border-gray-500 focus:shadow-sm focus:outline-none"
+            className="grow p-4 shadow-sm border rounded-2xl border-gray-400 focus:border-gray-500 focus:shadow-sm focus:outline-none"
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {
@@ -102,13 +102,13 @@ export default function Home() {
             }}
           />
           <button
-            className="w-12 sm:w-15 bg-black rounded-2xl aspect-square text-3xl text-white flex items-center justify-center"
+            className="w-15 bg-black rounded-2xl aspect-square text-3xl text-white flex items-center justify-center"
             onClick={() => addTask()}
           >
             <Plus size={30} />
           </button>
           <button
-            className="w-12 sm:w-15 bg-black rounded-2xl aspect-square text-3xl text-white flex items-center justify-center"
+            className="w-15 bg-black rounded-2xl aspect-square text-3xl text-white flex items-center justify-center"
             onClick={() => removeAll()}
           >
             <X size={30} />
