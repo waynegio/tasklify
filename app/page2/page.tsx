@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 
 export default function Home() {
   type Priority = "normal" | "urgent" | "later";
@@ -45,9 +45,9 @@ export default function Home() {
     trigger();
   };
 
-  // const removeTask = (index: number) => {
-  //   setArr((prev) => prev.filter((_, i) => i != index));
-  // };
+  const removeTask = (id: string) => {
+    setArr((prev) => prev.filter((item) => item.id != id));
+  };
 
   // const doneTask = (index: number) => {
   //   const copy = [...arr];
@@ -114,7 +114,7 @@ export default function Home() {
             <X size={30} />
           </button>
         </div>
-        <div className="flex mt-4 gap-4 grid grid-cols-3 w-80">
+        <div className="mt-4 gap-4 grid grid-cols-3 w-80">
           <button
             className={`tracking-wider text-lg py-1 px-4 rounded-3xl text-center duration-300 ${prio === "urgent" ? "bg-red-400" : "bg-zinc-200 hover:bg-zinc-300"}`}
             onClick={() => setPrio("urgent")}
@@ -137,7 +137,7 @@ export default function Home() {
         <p className="mt-2">
           {arr.filter((item) => !item.status).length} of {arr.length}
         </p>
-        <div className="flex flex-col gap-4 mt-4 flex overflow-y-auto mb-32">
+        <div className="flex flex-col gap-4 mt-4 overflow-y-auto mb-32">
           {[...arr]
             .sort((a, b) => {
               if (a.status !== b.status) {
@@ -148,15 +148,23 @@ export default function Home() {
             .map((item) => (
               <div
                 key={item.id}
-                className={`flex cursor-pointer border-2 border-gray-300 rounded-2xl p-2 sm:p-4 shadow-md ${item.status ? "line-through text-gray-400" : ""}`}
+                className={`group flex items-center cursor-pointer border-2 border-gray-300 rounded-2xl p-2 sm:px-4 sm:py-5 shadow-md ${item.status ? "line-through text-gray-400" : ""}`}
                 onClick={() => doneTask(item.id)}
               >
-                <p className="flex-1">{item.task}</p>
-                <p
-                  className={`w-17 text-center rounded-2xl ${item.priority === "later" ? "bg-yellow-400" : item.priority === "urgent" ? "bg-red-400" : "bg-green-400"}`}
-                >
-                  {item.priority}
-                </p>
+                <p className="flex-1 text-lg tracking-wider">{item.task}</p>
+                <div className="flex gap-2">
+                  <p
+                    className={`flex items-center justify-center w-17 rounded-2xl ${item.priority === "later" ? "bg-yellow-400" : item.priority === "urgent" ? "bg-red-400" : "bg-green-400"}`}
+                  >
+                    {item.priority}
+                  </p>
+                  <button
+                    className="flex items-center justify-center group-hover:opacity-100 opacity-0 duration-300 h-full aspect-square text-red-500"
+                    onClick={() => removeTask(item.id)}
+                  >
+                    <Trash2 />
+                  </button>
+                </div>
               </div>
             ))}
         </div>
