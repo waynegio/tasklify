@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Plus, Trash2, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Plus, X } from "lucide-react";
 import { Todo } from "./types/todo";
+import TodoItem from "./components/TodoItem";
+import Toast from "./components/Toast";
 
 export default function page() {
   const priorityOrder = {
@@ -13,8 +15,13 @@ export default function page() {
 
   const [arr, setArr] = useState<Todo[]>([]);
   const [text, setText] = useState<string>("");
+  const [editText, setEditText] = useState<string>("");
   const [prio, setPrio] = useState<"normal" | "urgent" | "later">("normal");
   const [show, setShow] = useState<boolean>(false);
+  const [modal, setModal] = useState<boolean>(false);
+  const [editId, setEditId] = useState<string>("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const editRef = useRef<HTMLInputElement>(null);
 
   const addTask = () => {
     if (text.trim() == "") {
@@ -41,18 +48,29 @@ export default function page() {
     setArr((prev) => prev.filter((item) => item.id != id));
   };
 
-  // const doneTask = (index: number) => {
-  //   const copy = [...arr];
-  //   copy[index].status = !copy[index].status;
-  //   setArr(copy);
-  // };
-
   const doneTask = (id: string) => {
     setArr((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, status: !item.status } : item,
       ),
     );
+  };
+
+  const saveEdit = () => {
+    setArr((prev) =>
+      prev.map((item) =>
+        item.id === editId ? { ...item, task: editText } : item,
+      ),
+    );
+    setEditText("");
+    setModal(false);
+  };
+
+  const editTask = (id: string) => {
+    setModal(true);
+    // let task = arr.find((prev) => prev.id === id);
+    // setEditText(task!.task);
+    setEditId(id);
   };
 
   const removeAll = () => {
@@ -65,6 +83,7 @@ export default function page() {
   };
 
   useEffect(() => {
+    inputRef.current?.focus();
     const saved = localStorage.getItem("List");
     if (saved) {
       setArr(JSON.parse(saved));
@@ -72,12 +91,14 @@ export default function page() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("List", JSON.stringify(arr));
-  }, [arr]);
+    if (modal) {
+      editRef.current?.focus();
+    }
+  }, [modal]);
 
   useEffect(() => {
-    console.log(prio);
-  }, [prio]);
+    localStorage.setItem("List", JSON.stringify(arr));
+  }, [arr]);
 
   return (
     <div className="flex flex-col items-center h-[100vh] bg-zinc-50">
@@ -89,6 +110,7 @@ export default function page() {
             className="grow p-4 shadow-sm border rounded-2xl border-gray-400 focus:border-gray-500 focus:shadow-sm focus:outline-none"
             value={text}
             onChange={(e) => setText(e.target.value)}
+            ref={inputRef}
             onKeyDown={(e) => {
               if (e.key == "Enter") addTask();
             }}
@@ -138,32 +160,43 @@ export default function page() {
               return priorityOrder[a.priority] - priorityOrder[b.priority];
             })
             .map((item) => (
-              <div
+              <TodoItem
                 key={item.id}
-                className={`group flex items-center cursor-pointer border-2 border-gray-300 rounded-2xl p-2 sm:px-4 sm:py-5 shadow-md ${item.status ? "line-through text-gray-400" : ""}`}
-                onClick={() => doneTask(item.id)}
-              >
-                <p className="flex-1 text-lg tracking-wider">{item.task}</p>
-                <div className="flex gap-2">
-                  <p
-                    className={`flex items-center justify-center w-17 rounded-2xl ${item.priority === "later" ? "bg-yellow-400" : item.priority === "urgent" ? "bg-red-400" : "bg-green-400"}`}
-                  >
-                    {item.priority}
-                  </p>
-                  <button
-                    className="flex items-center justify-center group-hover:opacity-100 opacity-0 duration-300 h-full aspect-square text-red-500"
-                    onClick={() => removeTask(item.id)}
-                  >
-                    <Trash2 />
-                  </button>
-                </div>
-              </div>
+                item={item}
+                onToggle={doneTask}
+                onDelete={removeTask}
+                onEdit={editTask}
+              />
             ))}
         </div>
       </main>
-      {show && (
-        <div className="fixed bottom-6 left-[50%] -translate-x-[50%] bg-black text-white py-3 px-6 rounded-xl shadow-lg">
-          Task added successfully!
+      {show && <Toast />}
+      {modal && (
+        <div
+          className="flex fixed inset-0 bg-black/40 items-center justify-center"
+          onClick={() => setModal(false)}
+        >
+          <div
+            className="flex bg-white rounded-2xl p-4 gap-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <input
+              className="border rounded-2xl px-4 py-2"
+              type="text"
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") saveEdit();
+              }}
+              ref={editRef}
+            />
+            <button
+              className="bg-black rounded-2xl text-white px-4 py-2"
+              onClick={saveEdit}
+            >
+              Save
+            </button>
+          </div>
         </div>
       )}
     </div>
