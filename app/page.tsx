@@ -17,17 +17,28 @@ export default function page() {
   const [text, setText] = useState<string>("");
   const [editText, setEditText] = useState<string>("");
   const [prio, setPrio] = useState<"normal" | "urgent" | "later">("normal");
-  const [show, setShow] = useState<boolean>(false);
+  const [show, setShow] = useState(false);
+  const [toastType, setToastType] = useState<"success" | "error">("success");
+  const [toastMsg, setToastMsg] = useState("");
   const [modal, setModal] = useState<boolean>(false);
   const [editId, setEditId] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const editRef = useRef<HTMLInputElement>(null);
 
+  const trigger = (msg: string, type: "success" | "error") => {
+    setToastMsg(msg);
+    setToastType(type);
+    setShow(true);
+    setTimeout(() => setShow(false), 2000);
+  };
+
   const addTask = () => {
-    if (text.trim() == "") {
+    if (text.trim() === "") {
       setText("");
+      trigger("Task cannot be empty!", "error");
       return;
     } else if (text.length > 25) {
+      trigger("Text too long!", "error");
       setText("");
       return;
     }
@@ -40,8 +51,8 @@ export default function page() {
         priority: prio,
       },
     ]);
+    trigger("Task is added!", "success");
     setText("");
-    trigger();
   };
 
   const removeTask = (id: string) => {
@@ -57,29 +68,32 @@ export default function page() {
   };
 
   const saveEdit = () => {
+    if (editText.length > 25) {
+      trigger("Text is too long!", "error");
+      return;
+    } else if (editText.trim() === "") {
+      trigger("Task cannot be empty!", "error");
+      return;
+    }
     setArr((prev) =>
       prev.map((item) =>
         item.id === editId ? { ...item, task: editText } : item,
       ),
     );
+    trigger("Task is updated!", "success");
     setEditText("");
     setModal(false);
   };
 
   const editTask = (id: string) => {
     setModal(true);
-    // let task = arr.find((prev) => prev.id === id);
-    // setEditText(task!.task);
+    const target = arr.find((prev) => prev.id === id);
+    setEditText(target!.task);
     setEditId(id);
   };
 
   const removeAll = () => {
     setArr([]);
-  };
-
-  const trigger = () => {
-    setShow(true);
-    setTimeout(() => setShow(false), 2000);
   };
 
   useEffect(() => {
@@ -170,7 +184,7 @@ export default function page() {
             ))}
         </div>
       </main>
-      {show && <Toast />}
+      <Toast show={show} message={toastMsg} type={toastType} />
       {modal && (
         <div
           className="flex fixed inset-0 bg-black/40 items-center justify-center"
@@ -192,7 +206,7 @@ export default function page() {
             />
             <button
               className="bg-black rounded-2xl text-white px-4 py-2"
-              onClick={saveEdit}
+              onClick={() => saveEdit()}
             >
               Save
             </button>

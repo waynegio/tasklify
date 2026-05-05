@@ -1,17 +1,14 @@
 import { Pencil, PencilIcon, Trash2 } from "lucide-react";
 import { Todo } from "../types/todo";
 
-export default function TodoItem({
-  item,
-  onToggle,
-  onDelete,
-  onEdit,
-}: {
+interface Props {
   item: Todo;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
-}) {
+}
+
+export default function TodoItem({ item, onToggle, onDelete, onEdit }: Props) {
   return (
     <div
       className={`group flex items-center cursor-pointer border-2 border-gray-300 rounded-2xl p-2 sm:px-4 sm:py-5 shadow-md ${item.status ? "line-through text-gray-400" : ""}`}
