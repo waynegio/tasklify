@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckSquare, Plus } from "lucide-react";
+import { CheckSquare, Inbox, Plus } from "lucide-react";
 import { Todo } from "./types/todo";
 import TodoItem from "./components/TodoItem";
 import Toast from "./components/Toast";
@@ -122,9 +122,14 @@ export default function Page() {
           <div className="p-[4px] bg-black rounded-lg">
             <CheckSquare className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#111111]">
-            TaskFlow
-          </h1>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-[#111111]">
+              TaskLy
+            </h1>
+            <p className="text-sm font-medium text-gray-600 mt-1">
+              Manage your task wisely.
+            </p>
+          </div>
         </div>
       </header>
       <main className="px-4 flex flex-col w-158">
@@ -191,22 +196,29 @@ export default function Page() {
           <div className="ml-4 h-[2px] flex-1 bg-gray-200"></div>
         </div>
         <div className="flex flex-col gap-2 mt-4 overflow-y-auto mb-32 h-80">
-          {[...arr]
-            .sort((a, b) => {
-              if (a.status !== b.status) {
-                return Number(a.status) - Number(b.status);
-              }
-              return priorityOrder[a.priority] - priorityOrder[b.priority];
-            })
-            .map((item) => (
-              <TodoItem
-                key={item.id}
-                item={item}
-                onToggle={doneTask}
-                onDelete={removeTask}
-                onEdit={editTask}
-              />
-            ))}
+          {arr.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-48 text-gray-400 gap-3 rounded-lg bg-gray-50/50">
+              <Inbox className="w-10 h-10 stroke-[1.5px]" />
+              <p className="text-sm font-medium">No tasks available</p>
+            </div>
+          ) : (
+            [...arr]
+              .sort((a, b) => {
+                if (a.status !== b.status) {
+                  return Number(a.status) - Number(b.status);
+                }
+                return priorityOrder[a.priority] - priorityOrder[b.priority];
+              })
+              .map((item) => (
+                <TodoItem
+                  key={item.id}
+                  item={item}
+                  onToggle={doneTask}
+                  onDelete={removeTask}
+                  onEdit={editTask}
+                />
+              ))
+          )}
         </div>
       </main>
       <Toast show={show} message={toastMsg} type={toastType} />
