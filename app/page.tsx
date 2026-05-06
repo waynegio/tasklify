@@ -93,10 +93,6 @@ export default function Page() {
     setEditId(id);
   };
 
-  const removeAll = () => {
-    setArr([]);
-  };
-
   useEffect(() => {
     inputRef.current?.focus();
     const saved = localStorage.getItem("List");
