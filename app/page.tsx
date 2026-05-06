@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Plus, X } from "lucide-react";
+import { CheckSquare, Plus } from "lucide-react";
 import { Todo } from "./types/todo";
 import TodoItem from "./components/TodoItem";
 import Toast from "./components/Toast";
 
-export default function page() {
+export default function Page() {
   const priorityOrder = {
     urgent: 0,
     normal: 1,
@@ -38,7 +38,7 @@ export default function page() {
       trigger("Task cannot be empty!", "error");
       return;
     } else if (text.length > 25) {
-      trigger("Text too long!", "error");
+      trigger("Text is too long!", "error");
       setText("");
       return;
     }
@@ -51,7 +51,8 @@ export default function page() {
         priority: prio,
       },
     ]);
-    trigger("Task is added!", "success");
+    trigger("Task added successfully!", "success");
+    setPrio("normal");
     setText("");
   };
 
@@ -115,57 +116,81 @@ export default function page() {
   }, [arr]);
 
   return (
-    <div className="flex flex-col items-center h-[100vh] bg-zinc-50">
-      <main className="pt-8 px-4 flex flex-col sm:w-180 h-full w-full">
-        <div className="flex gap-4">
-          <input
-            type="text"
-            placeholder="Add a new task..."
-            className="grow p-4 shadow-sm border rounded-2xl border-gray-400 focus:border-gray-500 focus:shadow-sm focus:outline-none"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            ref={inputRef}
-            onKeyDown={(e) => {
-              if (e.key == "Enter") addTask();
-            }}
-          />
-          <button
-            className="w-15 bg-black rounded-2xl aspect-square text-3xl text-white flex items-center justify-center"
-            onClick={() => addTask()}
-          >
-            <Plus size={30} />
-          </button>
-          <button
-            className="w-15 bg-black rounded-2xl aspect-square text-3xl text-white flex items-center justify-center"
-            onClick={() => removeAll()}
-          >
-            <X size={30} />
-          </button>
+    <div className="flex flex-col items-center h-screen overflow-hidden bg-zinc-50">
+      <header className="px-4 w-158 flex justify-between items-center mb-2 mt-6">
+        <div className="flex items-center gap-2">
+          <div className="p-[4px] bg-black rounded-lg">
+            <CheckSquare className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-[#111111]">
+            TaskFlow
+          </h1>
         </div>
-        <div className="mt-4 gap-4 grid grid-cols-3 w-80">
-          <button
-            className={`tracking-wider text-lg py-1 px-4 rounded-3xl text-center duration-300 ${prio === "urgent" ? "bg-red-400" : "bg-zinc-200 hover:bg-zinc-300"}`}
-            onClick={() => setPrio("urgent")}
-          >
-            Urgent
-          </button>
-          <button
-            className={`tracking-wider text-lg py-1 px-4 rounded-3xl text-center duration-300 ${prio === "normal" ? "bg-green-400" : "bg-zinc-200 hover:bg-zinc-300"}`}
-            onClick={() => setPrio("normal")}
-          >
-            Normal
-          </button>
-          <button
-            className={`tracking-wider text-lg py-1 px-4 rounded-3xl text-center duration-300 ${prio === "later" ? "bg-yellow-400" : "bg-zinc-200 hover:bg-zinc-300"}`}
-            onClick={() => setPrio("later")}
-          >
-            Later
-          </button>
+      </header>
+      <main className="px-4 flex flex-col w-158">
+        <div className="bg-white p-4 shadow-md rounded-xl flex flex-col">
+          <div className="flex gap-4">
+            <input
+              type="text"
+              placeholder="What needs to be done?"
+              className="flex-1 px-4 shadow-sm border rounded-lg border-gray-400 focus:border-gray-500 focus:border-3 focus:shadow-sm focus:outline-none"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              ref={inputRef}
+              onKeyDown={(e) => {
+                if (e.key == "Enter") addTask();
+              }}
+            />
+            <button
+              className="w-12 h-12 bg-black rounded-lg text-3xl text-white flex items-center justify-center cursor-pointer hover:bg-black/80"
+              onClick={() => addTask()}
+            >
+              <Plus size={30} />
+            </button>
+          </div>
+          <div className="flex items-center gap-2 mt-4">
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Priority:
+            </span>
+            <button
+              className={`w-18 text-center text-sm px-3 py-1 rounded-full ml-2 font-semibold transition ${
+                prio === "urgent"
+                  ? "bg-red-500 text-white shadow-lg"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+              onClick={() => setPrio("urgent")}
+            >
+              Urgent
+            </button>
+            <button
+              className={`w-18 text-center text-sm px-3 py-1 rounded-full font-semibold transition ${
+                prio === "normal"
+                  ? "bg-gray-800 text-white shadow-lg"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+              onClick={() => setPrio("normal")}
+            >
+              Normal
+            </button>
+            <button
+              className={`w-18 text-center text-sm px-3 py-1 rounded-full font-semibold transition ${
+                prio === "later"
+                  ? "bg-yellow-500 text-white shadow-lg"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+              onClick={() => setPrio("later")}
+            >
+              Later
+            </button>
+          </div>
         </div>
-        <p className="mt-2">
-          {arr.filter((item) => !item.status).length} of {arr.length}
-        </p>
-        <div className="flex flex-col gap-4 mt-4 overflow-y-auto mb-32">
+        <div className="flex items-center mt-4">
+          <span className="flex items-center justify-center text-gray-500 text-sm">
+            {arr.filter((item) => !item.status).length} Remaining
+          </span>
+          <div className="ml-4 h-[2px] flex-1 bg-gray-200"></div>
+        </div>
+        <div className="flex flex-col gap-2 mt-4 overflow-y-auto mb-32 h-80">
           {[...arr]
             .sort((a, b) => {
               if (a.status !== b.status) {
@@ -187,29 +212,48 @@ export default function page() {
       <Toast show={show} message={toastMsg} type={toastType} />
       {modal && (
         <div
-          className="flex fixed inset-0 bg-black/40 items-center justify-center"
+          className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center p-4 transition-opacity duration-200"
           onClick={() => setModal(false)}
         >
           <div
-            className="flex bg-white rounded-2xl p-4 gap-4"
+            className="bg-white w-full max-w-md rounded-lg shadow-lg border border-[#e5e5e5] overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            <input
-              className="border rounded-2xl px-4 py-2"
-              type="text"
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") saveEdit();
-              }}
-              ref={editRef}
-            />
-            <button
-              className="bg-black rounded-2xl text-white px-4 py-2"
-              onClick={() => saveEdit()}
-            >
-              Save
-            </button>
+            <div className="px-6 py-4 border-b border-[#e5e5e5] flex justify-between items-center">
+              <h3 className="font-semibold text-[#111111]">Edit Task</h3>
+            </div>
+
+            <div className="p-6 flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-gray-600">
+                  Task Name
+                </label>
+                <input
+                  className="bg-white border border-[#e5e5e5] rounded-md px-4 py-2.5 text-[#111111] focus:outline-none focus:border-gray-400 transition-colors"
+                  type="text"
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") saveEdit();
+                  }}
+                  ref={editRef}
+                />
+              </div>
+            </div>
+            <div className="px-6 py-4 bg-gray-50 border-t border-[#e5e5e5] flex justify-end gap-3">
+              <button
+                className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-200 transition-colors"
+                onClick={() => setModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-[#111111] hover:bg-gray-800 text-white rounded-md text-sm font-medium transition-colors"
+                onClick={saveEdit}
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
       )}
