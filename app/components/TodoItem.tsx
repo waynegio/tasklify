@@ -28,12 +28,12 @@ export default function TodoItem({ item, onToggle, onDelete, onEdit }: Props) {
       <p className="flex-1 text-lg tracking-wider">{item.task}</p>
       <div className="flex gap-2 items-center">
         <p
-          className={`flex items-center justify-center w-17 border rounded-2xl uppercase text-xs font-bold ${item.priority === "later" ? "bg-yellow-200 text-yellow-500 border-yellow-300" : item.priority === "urgent" ? "bg-red-200 text-red-600 border-red-300" : "bg-gray-200 text-gray-600 border-gray-300"}`}
+          className={`flex items-center justify-center px-2 w-18 border rounded-2xl uppercase text-xs font-bold ${item.priority === "later" ? "bg-yellow-200 text-yellow-500 border-yellow-300" : item.priority === "urgent" ? "bg-red-200 text-red-600 border-red-300" : "bg-gray-200 text-gray-600 border-gray-300"}`}
         >
           {item.priority}
         </p>
         <button
-          className="flex items-center justify-center h-6 w-6 p-[2px] rounded-lg group-hover:opacity-100 opacity-0 duration-300 text-gray-500 cursor-pointer hover:text-red-500 hover:bg-red-200"
+          className="flex items-center justify-center h-6 w-6 p-[2px] rounded-lg group-hover:opacity-100 opacity-100 sm:opacity-0 duration-300 text-gray-500 cursor-pointer hover:text-red-500 hover:bg-red-200"
           onClick={(e) => {
             e.stopPropagation();
             onDelete(item.id);
