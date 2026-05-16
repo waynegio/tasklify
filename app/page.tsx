@@ -191,7 +191,7 @@ export default function Page() {
           </span>
           <div className="ml-4 h-[2px] flex-1 bg-gray-200"></div>
         </div>
-        <div className="flex flex-col gap-2 mt-4 overflow-y-auto h-120 sm:h-80">
+        <div className="flex flex-col gap-2 mt-4 sm:overflow-y-auto sm:h-80">
           {arr.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-48 text-gray-400 gap-3 rounded-lg bg-gray-50/50">
               <Inbox className="w-10 h-10 stroke-[1.5px]" />
@@ -216,7 +216,7 @@ export default function Page() {
               ))
           )}
         </div>
-        <div className="flex justify-center items-center gap-2 text-[10px] font-extrabold text-gray-400 mt-12 tracking-wider">
+        <div className="flex justify-center items-center gap-2 text-[10px] font-extrabold text-gray-400 mt-12 tracking-wider mb-8">
           <span className="w-[5px] h-[5px] bg-green-500 rounded-full"></span>
           STORED LOCALLY
         </div>
