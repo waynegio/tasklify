@@ -134,7 +134,7 @@ export default function Page() {
             <input
               type="text"
               placeholder="What needs to be done?"
-              className="flex-1 px-4 shadow-sm border rounded-lg border-gray-400 focus:border-gray-500 focus:border-3 focus:shadow-sm focus:outline-none"
+              className="flex-1 min-w-0 px-4 shadow-sm border rounded-lg border-gray-400 focus:border-gray-500 focus:border-3 focus:shadow-sm focus:outline-none"
               value={text}
               onChange={(e) => setText(e.target.value)}
               ref={inputRef}
@@ -143,7 +143,7 @@ export default function Page() {
               }}
             />
             <button
-              className="w-12 h-12 bg-black rounded-lg text-3xl text-white flex items-center justify-center cursor-pointer hover:bg-black/80"
+              className="min-w-12 min-h-12 bg-black rounded-lg text-3xl text-white flex items-center justify-center cursor-pointer hover:bg-black/80"
               onClick={() => addTask()}
             >
               <Plus size={30} />

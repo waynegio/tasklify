@@ -22,7 +22,7 @@ export default function TodoItem({ item, onToggle, onDelete, onEdit }: Props) {
 
   return (
     <div
-      className={`group flex items-center cursor-pointer border border-gray-300 rounded-xl p-2 sm:px-4 sm:py-[14px] sm:px-4 shadow-md ${item.status ? "line-through text-gray-400 bg-black/5" : ""} hover:border-gray-400 duration-300`}
+      className={`group flex items-center cursor-pointer border border-gray-300 rounded-xl p-4 sm:px-4 sm:py-[14px] sm:px-4 shadow-md ${item.status ? "line-through text-gray-400 bg-black/5" : ""} hover:border-gray-400 duration-300`}
       onClick={() => onToggle(item.id)}
     >
       <p className="flex-1 text-lg tracking-wider">{item.task}</p>
